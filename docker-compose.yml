@@ -2,12 +2,19 @@
 version: "3.5"
 services:
 
+  # Watchtower for automated updates
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
   # Pihole for ad blocking
   pihole:
     image: pihole/pihole
     environment:
       TZ: 'Europe/Belgrade'
       WEBPASSWORD: fU1HRlMxGy9oNlkPxYSc
+      VIRTUAL_HOST: pihole.local
     volumes:
       - ./data/pihole/etc/pihole:/etc/pihole
       - ./data/pihole/etc/dnsmasq:/etc/dnsmasq
