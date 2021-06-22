@@ -1,0 +1,11 @@
+$ORIGIN local.
+$TTL 1h
+
+flocksocial.io. IN SOA ns.local. nemanja.local. ( 1 1d 2h 4w 1h )
+ns.local. IN A 10.25.0.15
+
+flocksocial.io. IN NS ns
+
+local. IN A 10.25.0.15
+
+*.local. IN A 10.25.0.15
