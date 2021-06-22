@@ -1,0 +1,14 @@
+http:
+  routers:
+    cockpit:
+      entryPoints:
+        - http
+      service: cockpit
+      rule: Host(`cockpit.local`)
+
+  services:
+    cockpit:
+      loadBalancer:
+        servers:
+          - url: https://10.5.0.1:9090
+        passHostHeader: false

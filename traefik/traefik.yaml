@@ -1,0 +1,28 @@
+serversTransport:
+  insecureSkipVerify: true
+
+global:
+  sendAnonymousUsage: false
+
+api:
+  dashboard: true
+  insecure: true
+
+entryPoints:
+  http:
+    address: ":80"
+
+providers:
+  docker:
+    exposedByDefault: false
+  file:
+    directory: "/etc/traefik/services"
+
+accessLog:
+  filePath: "/log/access.json"
+  format: "json"
+  bufferingSize: 100
+  fields:
+    defaultMode: keep
+    headers:
+      defaultMode: keep

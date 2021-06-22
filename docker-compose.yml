@@ -53,21 +53,22 @@ services:
 
   # Traefik for exposing web services
   reverse-proxy:
-    image: traefik:v2.2
-    command: --api.insecure=true --providers.docker
+    image: traefik:v2.4
+    #command: --api.insecure=true --providers.docker /etc/traefik
+    #command: --api.insecure=true --providers.docker
     ports:
       - "10.25.0.15:80:80"
       - "10.25.0.15:8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik:/etc/traefik
 
     networks:
       - home
 
   # Gitea for local git storage
-  server:
+  gitea:
     image: gitea/gitea:1.14.2
-    container_name: gitea
     environment:
       - USER_UID=1000
       - USER_GID=1000
