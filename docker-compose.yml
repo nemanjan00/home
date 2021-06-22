@@ -115,6 +115,34 @@ services:
     restart: unless-stopped
 
   # Plex
+  plex:
+    image: ghcr.io/linuxserver/plex
+    container_name: plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+    volumes:
+      - ./data/plex/config:/config
+      - ~/Desktop:/tv
+      - ~/Video:/Video
+    devices:
+      - /dev/dri:/dev/dri
+    networks:
+      - home
+    privileged: true
+    restart: unless-stopped
+
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.services.plex.loadbalancer.server.port=32400"
+
+      #- "traefik.http.middlewares.plex-prefix.addprefix.prefix=/web"
+
+      - "traefik.http.routers.plex.service=plex"
+      - "traefik.http.routers.plex.rule=Host(`plex.local`)"
+      #- "traefik.http.routers.plex.middlewares=plex-prefix"
 
 networks:
   home:
