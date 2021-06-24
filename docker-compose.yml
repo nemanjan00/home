@@ -24,7 +24,7 @@ services:
 
     networks:
       home:
-        ipv4_address: 10.5.0.2
+        ipv4_address: 10.5.0.200
 
     labels:
       - "traefik.enable=true"
