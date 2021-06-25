@@ -8,6 +8,9 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
+    networks:
+      - home
+
   # Pihole for ad blocking
   pihole:
     image: pihole/pihole
@@ -18,9 +21,8 @@ services:
     volumes:
       - ./data/pihole/etc/pihole:/etc/pihole
       - ./data/pihole/etc/dnsmasq:/etc/dnsmasq
+
     restart: unless-stopped
-    networks:
-      - home
 
     networks:
       home:
@@ -62,6 +64,8 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik:/etc/traefik
+
+    restart: unless-stopped
 
     networks:
       - home
