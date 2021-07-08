@@ -129,7 +129,8 @@ services:
       - VERSION=docker
     volumes:
       - ./data/plex/config:/config
-      - ~/Desktop:/tv
+      - ~/Desktop/TVShows:/tv
+      - ~/Desktop/Movies:/movies
       - ~/Video:/Video
     devices:
       - /dev/dri:/dev/dri
