@@ -70,6 +70,31 @@ services:
     networks:
       - home
 
+  # ZNC
+  znc:
+    image: znc
+
+    restart: unless-stopped
+
+    networks:
+      - home
+
+    volumes:
+      - ./data/znc:/znc-data
+
+    ports:
+      - 6667:6667
+
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.services.znc.loadbalancer.server.port=6667"
+
+      - "traefik.http.routers.znc.service=znc"
+      - "traefik.http.routers.znc.rule=Host(`znc.local`)"
+
+    restart: unless-stopped
+
   # Gitea for local git storage
   gitea:
     image: gitea/gitea:1.14.2
@@ -132,6 +157,7 @@ services:
       - ~/Desktop/TVShows:/tv
       - ~/Desktop/Movies:/movies
       - ~/Video:/Video
+      - ~/Pics:/Pics
     devices:
       - /dev/dri:/dev/dri
     networks:
