@@ -5,5 +5,7 @@
 
   hosts data/hosts nemanja.flocksocial.io.
   file data/db.local local.
-  forward . 10.5.0.200:53
+  forward . 10.5.0.200:53 {
+    max_concurrent 10000
+  }
 }
