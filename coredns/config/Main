@@ -3,8 +3,9 @@
 .:53 {
   errors
 
-  hosts data/hosts nemanja.flocksocial.io.
-  file data/db.local local.
+  hosts /data/hosts nemanja.flocksocial.io.
+  file /data/db.local local.
+  file /data/db.vcap.me vcap.me.
   forward . 10.5.0.200:53 {
     max_concurrent 10000
   }

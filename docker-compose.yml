@@ -99,7 +99,7 @@ services:
       - "traefik.http.routers.znc.rule=Host(`znc.local`)"
 
   nextcloud:
-    image: nextcloud:22
+    image: nextcloud:25
     environment:
       - POSTGRES_DB=nextcloud
       - POSTGRES_USER=nextcloud
@@ -202,6 +202,8 @@ services:
       - ~/storage/Video:/Video
       - ~/storage/Pics:/Pics
       - ~/storage/drone1:/drone1
+      - ~/storage/camera1:/camera1
+      - ~/storage/camera2:/camera2
       - ~/storage/drone2:/drone2
       - ~/storage/bledilf:/bled
     devices:
@@ -212,6 +214,7 @@ services:
     restart: unless-stopped
     ports:
       - 32400:32400
+    #network_mode: host
 
     labels:
       - "traefik.enable=true"
@@ -223,6 +226,32 @@ services:
       - "traefik.http.routers.plex.service=plex"
       - "traefik.http.routers.plex.rule=Host(`plex.local`)"
       #- "traefik.http.routers.plex.middlewares=plex-prefix"
+
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin:latest
+    container_name: jellyfin
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    networks:
+      - home
+    volumes:
+      - ./data/jellyfin/config:/config
+      - ~/storage/TVShows:/data/tvshows
+      - ~/storage/Movies:/data/movies
+    restart: unless-stopped
+
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+
+      #- "traefik.http.middlewares.plex-prefix.addprefix.prefix=/web"
+
+      - "traefik.http.routers.jellyfin.service=jellyfin"
+      - "traefik.http.routers.jellyfin.rule=Host(`jellyfin.local`)"
+      #- "traefik.http.routers.jellyfin.middlewares=plex-prefix"
 
   # Etesync
   etesync:
@@ -243,6 +272,29 @@ services:
 
       - "traefik.http.routers.etesync.service=etesync"
       - "traefik.http.routers.etesync.rule=Host(`etesync.local`)"
+
+  ubooquity:
+    image: lscr.io/linuxserver/ubooquity:latest
+    container_name: ubooquity
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - MAXMEM=
+    volumes:
+      - ./data/ubooquity/data:/config
+      - ~/Library:/books
+    ports:
+      - 2203:2203
+      - 2202:2202
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.services.ubooquity.loadbalancer.server.port=2202"
+
+      - "traefik.http.routers.ubooquity.service=ubooquity"
+      - "traefik.http.routers.ubooquity.rule=Host(`ubooquity.local`)"
 
 networks:
   home:
