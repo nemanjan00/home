@@ -13,7 +13,7 @@ services:
 
   # Pihole for ad blocking
   pihole:
-    image: pihole/pihole
+    image: pihole/pihole:2024.02.0
     environment:
       TZ: 'Europe/Belgrade'
       WEBPASSWORD: fU1HRlMxGy9oNlkPxYSc
@@ -99,7 +99,7 @@ services:
       - "traefik.http.routers.znc.rule=Host(`znc.local`)"
 
   nextcloud:
-    image: nextcloud:25
+    image: nextcloud:30
     environment:
       - POSTGRES_DB=nextcloud
       - POSTGRES_USER=nextcloud
@@ -120,7 +120,8 @@ services:
       - home
 
     volumes:
-      - ./data/nextcloud/data:/var/www/html
+      #- ./data/nextcloud/data:/var/www/html
+      - ~/nemanjan00/storage/nextcloud/data:/var/www/html
 
     ports:
       - 1345:80
@@ -197,6 +198,7 @@ services:
       - VERSION=docker
     volumes:
       - ./data/plex/config:/config
+      - ~/svadba:/svadba
       - ~/storage/TVShows:/tv
       - ~/storage/Movies:/movies
       - ~/storage/Video:/Video
@@ -206,6 +208,7 @@ services:
       - ~/storage/camera2:/camera2
       - ~/storage/drone2:/drone2
       - ~/storage/bledilf:/bled
+      - ~/storage/fpv/new:/fpv
     devices:
       - /dev/dri:/dev/dri
     networks:
@@ -273,6 +276,24 @@ services:
       - "traefik.http.routers.etesync.service=etesync"
       - "traefik.http.routers.etesync.rule=Host(`etesync.local`)"
 
+  # Etesync
+  mqtt-explorer:
+    image: smeagolworms4/mqtt-explorer
+    volumes:
+      - ./data/mqtt-explorer:/mqtt-explorer/config
+    networks:
+      - home
+    restart: unless-stopped
+
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.services.mqtt-explorer.loadbalancer.server.port=4000"
+
+      - "traefik.http.routers.mqtt-explorer.service=mqtt-explorer"
+      - "traefik.http.routers.mqtt-explorer.rule=Host(`mqtt-explorer.local`)"
+
+
   ubooquity:
     image: lscr.io/linuxserver/ubooquity:latest
     container_name: ubooquity
@@ -295,6 +316,23 @@ services:
 
       - "traefik.http.routers.ubooquity.service=ubooquity"
       - "traefik.http.routers.ubooquity.rule=Host(`ubooquity.local`)"
+
+  openwebrx:
+    image: jketterl/openwebrx:stable
+    networks:
+      - home
+    devices:
+      - /dev/bus/usb
+    volumes:
+      - ./data/openwebrx/data:/var/lib/openwebrx
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.services.openwebrx.loadbalancer.server.port=8073"
+
+      - "traefik.http.routers.openwebrx.service=openwebrx"
+      - "traefik.http.routers.openwebrx.rule=Host(`openwebrx.local`)"
 
 networks:
   home:
