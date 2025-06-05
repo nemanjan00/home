@@ -126,7 +126,7 @@ services:
 
     volumes:
       #- ./data/nextcloud/data:/var/www/html
-      - ~/nemanjan00/storage/nextcloud/data:/var/www/html
+      - ~/storage/nextcloud/data:/var/www/html
 
     ports:
       - 1345:80
